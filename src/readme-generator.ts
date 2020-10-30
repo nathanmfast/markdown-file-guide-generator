@@ -13,6 +13,7 @@ class ReadmeGenerator {
 
   constructor (folderNamesToIgnoreFilesIn?: string[]) {
     this._folderNamesToIgnoreFilesIn = folderNamesToIgnoreFilesIn
+    this._maxLength = 0
   }
 
   private getChildren (rootFolderPath: string): IFileOrFolder[] {
@@ -37,7 +38,6 @@ class ReadmeGenerator {
       if (a.isFile && !b.isFile) return 1
       return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
     })
-
     return children.map((x) => {
       return {
         ...x,
@@ -46,65 +46,44 @@ class ReadmeGenerator {
     })
   }
 
-  private getMaxLength (contents: IFileOrFolder[], depth: number = 0): number {
-    if (!contents || contents.length === 0) {
-      return 0
-    }
-    let maxLength: number = 0
-    for (var item of contents) {
-      const length:number = item.name.length + (depth * 2) // however many characters you need for each nested folder
-      if (length > maxLength) {
-        maxLength = length
-      }
-      const childrenMaxLength: number = this.getMaxLength(item.children, depth + 1)
-      if (childrenMaxLength > maxLength) {
-        maxLength = childrenMaxLength
+  private getMaxLength (contents: IFileOrFolder[], depth: number = 0) {
+    let maxLength = 0
+    if (!!contents && contents.length > 0) {
+      for (var item of contents) {
+        maxLength = Math.max(...[
+          item.name.length + (depth * 3), // leader uses 3 characters for each indentation
+          this.getMaxLength(item.children, depth + 1),
+          maxLength
+        ])
       }
     }
     return maxLength
   }
 
-
-
-  private getLeader(depth: number, isLast: boolean): string{
+  private getLeader (depth: number, isLast: boolean): string {
     let leader = ''
-    if(depth > 0){
-    if(depth > 1){
-      let numSpacer = depth - 1
-      for (var x = 0; x < numSpacer; x++) {
-        leader += '│  '
+    if (depth > 0) {
+      if (depth > 1) {
+        const numSpacer = depth - 1
+        for (var x = 0; x < numSpacer; x++) {
+          leader += '│  '
+        }
       }
+      leader += isLast ? '└' : '├'
+      leader += '─ '
     }
-    leader += isLast ? '└' : '├'
-    leader += '─ '
-  }
     return leader
-    /*
-    switch(depth){
-      case 0:
-        return ''
-      case 1:
-        return 'xx '
-      case 2:
-        return 'x   xx '
-      case 3:
-        return 'x   x   xx '
-      default:
-        return 'FUCK'
-    }
-    */
-
   }
 
   private generateRow (contents: Array<IFileOrFolder>, depth: number = 0) : string {
     let markdown :string = ''
-    let iterations = contents.length;
+    let iterations = contents.length
     for (const item of contents) {
       iterations--
       markdown += '| '
 
-      let leader = this.getLeader(depth, !iterations)
-      //markdown += ''.padEnd(depth * 2)
+      const leader = this.getLeader(depth, !iterations)
+      // markdown += ''.padEnd(depth * 2)
       markdown += leader
 
       markdown += item.name.padEnd(this._maxLength - leader.length + 2, ' ')
