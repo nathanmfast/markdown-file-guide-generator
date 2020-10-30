@@ -9,11 +9,13 @@ interface IFileOrFolder{
 
 class ReadmeGenerator {
   _folderNamesToIgnoreFilesIn: string[]
-  _maxLength: number
+  _column1MaxLength: number
+  _column2MaxLength: number
 
-  constructor (folderNamesToIgnoreFilesIn?: string[]) {
-    this._folderNamesToIgnoreFilesIn = folderNamesToIgnoreFilesIn
-    this._maxLength = 0
+  constructor () {
+    this._folderNamesToIgnoreFilesIn = []
+    this._column1MaxLength = 0
+    this._column2MaxLength = 0
   }
 
   private getChildren (rootFolderPath: string): IFileOrFolder[] {
@@ -28,24 +30,22 @@ class ReadmeGenerator {
         thisChildren = this.getChildren(filepath)
       }
       children.push({
-        name: name,
+        name: name + (isFile ? '' : '/'),
         isFile: isFile,
         children: thisChildren
       })
     }
     children.sort((a, b) => {
+      // folders come before files
       if (!a.isFile && b.isFile) return -1
       if (a.isFile && !b.isFile) return 1
+      // otherwise its alphabetical
       return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
     })
-    return children.map((x) => {
-      return {
-        ...x,
-        name: x.name + (x.isFile ? '' : '/')
-      }
-    })
+    return children
   }
 
+  // maxLength does not include any whitespace, e.g. "└─ app.ts"
   private getMaxLength (contents: IFileOrFolder[], depth: number = 0) {
     let maxLength = 0
     if (!!contents && contents.length > 0) {
@@ -60,7 +60,7 @@ class ReadmeGenerator {
     return maxLength
   }
 
-  private getLeader (depth: number, isLast: boolean): string {
+  private getLeader (depth: number, isLast: boolean) {
     let leader = ''
     if (depth > 0) {
       if (depth > 1) {
@@ -69,25 +69,21 @@ class ReadmeGenerator {
           leader += '│  '
         }
       }
-      leader += isLast ? '└' : '├'
-      leader += '─ '
+      leader += (isLast ? '└' : '├') + '─ '
     }
     return leader
   }
 
-  private generateRow (contents: Array<IFileOrFolder>, depth: number = 0) : string {
-    let markdown :string = ''
+  private generateRow (contents: IFileOrFolder[], depth: number = 0) {
+    let markdown = ''
     let iterations = contents.length
     for (const item of contents) {
-      iterations--
+      const leader = this.getLeader(depth, !--iterations)
       markdown += '| '
-
-      const leader = this.getLeader(depth, !iterations)
-      // markdown += ''.padEnd(depth * 2)
       markdown += leader
-
-      markdown += item.name.padEnd(this._maxLength - leader.length + 2, ' ')
-      markdown += '|'
+      markdown += item.name.padEnd(this._column1MaxLength - leader.length, ' ')
+      markdown += ' | '
+      markdown += ''.padEnd(this._column2MaxLength, ' ')
       markdown += ' |'
       markdown += '\n'
       markdown += this.generateRow(item.children, depth + 1)
@@ -95,17 +91,22 @@ class ReadmeGenerator {
     return markdown
   }
 
-  public generate (rootFolderPath: string): string {
+  public generate (rootFolderPath: string, folderNamesToIgnoreFilesIn: string[], column1Heading: string, column2Heading: string): string {
+    this._folderNamesToIgnoreFilesIn = folderNamesToIgnoreFilesIn
     const contents: IFileOrFolder[] = this.getChildren(rootFolderPath)
-    console.log(contents)
-
-    this._maxLength = this.getMaxLength(contents)
-
-    return this.generateRow(contents)
+    this._column1MaxLength = Math.max(...[this.getMaxLength(contents), column1Heading.length])
+    this._column2MaxLength = column2Heading.length
+    let markdown = ''
+    markdown += '| ' + column1Heading.padEnd(this._column1MaxLength, ' ') + ' | ' + column2Heading + ' |\n'
+    markdown += '|-' + ''.padEnd(this._column1MaxLength, '-') + '-|-' + ''.padEnd(this._column2MaxLength, '-') + '-|\n'
+    markdown += this.generateRow(contents)
+    return markdown
   }
 }
 
-export const generate = function (rootFolderPath: string, folderNamesToIgnoreFilesIn?: string[]): string {
-  const generator: ReadmeGenerator = new ReadmeGenerator(folderNamesToIgnoreFilesIn)
-  return generator.generate(rootFolderPath)
+export const generate = function (rootFolderPath: string, 
+  folderNamesToIgnoreFilesIn: string[] = ['.git', 'node_modules'], 
+  column1Heading: string = 'File/Folder', 
+  column2Heading: string = 'Description') {
+  return (new ReadmeGenerator()).generate(rootFolderPath, folderNamesToIgnoreFilesIn, column1Heading, column2Heading)
 }

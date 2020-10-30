@@ -1,7 +1,7 @@
 {
   "name": "readme-file-guide",
   "version": "0.0.1",
-  "description": "Generates a file guide for README.md files. Ascii folder structure represented in rows in a markdown table.",
+  "description": "Generates a File Guide for use in README.md files. It creates a two-column markdown table, and in the first column it uses unicode box-drawing characters to present a file structure.",
   "scripts": {
     "build": "tsc",
     "start": "tsc && node ./dist/app.js",
