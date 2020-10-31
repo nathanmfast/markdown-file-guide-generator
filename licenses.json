@@ -59,6 +59,12 @@
         "licenseUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/raw/master/LICENSE",
         "parents": "markdown-file-guide-generator"
     },
+    "@types/stringify-object@3.3.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+        "licenseUrl": "https://github.com/DefinitelyTyped/DefinitelyTyped/raw/master/LICENSE",
+        "parents": "markdown-file-guide-generator"
+    },
     "@typescript-eslint/eslint-plugin@4.5.0": {
         "licenses": "MIT",
         "repository": "https://github.com/typescript-eslint/typescript-eslint",
@@ -557,6 +563,12 @@
         "licenseUrl": "https://github.com/mikolalysenko/functional-red-black-tree/raw/master/LICENSE",
         "parents": "markdown-file-guide-generator"
     },
+    "get-own-enumerable-property-symbols@3.0.2": {
+        "licenses": "ISC",
+        "repository": "https://github.com/mightyiam/get-own-enumerable-property-symbols",
+        "licenseUrl": "https://github.com/mightyiam/get-own-enumerable-property-symbols/raw/master/LICENSE",
+        "parents": "markdown-file-guide-generator"
+    },
     "glob-parent@5.1.1": {
         "licenses": "ISC",
         "repository": "https://github.com/gulpjs/glob-parent",
@@ -707,10 +719,22 @@
         "licenseUrl": "https://github.com/jonschlinkert/is-number/raw/master/LICENSE",
         "parents": "markdown-file-guide-generator"
     },
+    "is-obj@1.0.1": {
+        "licenses": "MIT",
+        "repository": "https://github.com/sindresorhus/is-obj",
+        "licenseUrl": "https://github.com/sindresorhus/is-obj/raw/master/license",
+        "parents": "markdown-file-guide-generator"
+    },
     "is-regex@1.1.1": {
         "licenses": "MIT",
         "repository": "https://github.com/ljharb/is-regex",
         "licenseUrl": "https://github.com/ljharb/is-regex/raw/master/LICENSE",
+        "parents": "markdown-file-guide-generator"
+    },
+    "is-regexp@1.0.0": {
+        "licenses": "MIT",
+        "repository": "https://github.com/sindresorhus/is-regexp",
+        "licenseUrl": "https://github.com/sindresorhus/is-regexp",
         "parents": "markdown-file-guide-generator"
     },
     "is-string@1.0.5": {
@@ -1119,6 +1143,12 @@
         "licenses": "MIT",
         "repository": "https://github.com/es-shims/String.prototype.trimStart",
         "licenseUrl": "https://github.com/es-shims/String.prototype.trimStart/raw/master/LICENSE",
+        "parents": "markdown-file-guide-generator"
+    },
+    "stringify-object@3.3.0": {
+        "licenses": "BSD-2-Clause",
+        "repository": "https://github.com/yeoman/stringify-object",
+        "licenseUrl": "https://github.com/yeoman/stringify-object/raw/master/LICENSE",
         "parents": "markdown-file-guide-generator"
     },
     "strip-ansi@5.2.0": {

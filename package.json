@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc && node ./dist/app.js",
-    "lint": "eslint . --ext .ts --fix"
+    "lint": "eslint . --ext .ts --fix",
+    "licenses": "npm-license-crawler -dependencies -json licenses.json && tsc && node ./dist/tools/licenses.js"
   },
   "author": "Nathan Fast",
   "license": "MIT",

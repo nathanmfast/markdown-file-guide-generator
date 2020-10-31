@@ -1,6 +1,6 @@
 import * as fs from 'fs'
-import path = require('path')
 import * as stringify from 'stringify-object'
+import path = require('path')
 
 enum FileSystemEntryType{
   File,
@@ -108,33 +108,48 @@ const generateHeader = function (column1Heading: string, column2Heading: string,
 }
 
 interface IFileGuideEntry{
-  name:string,
-  description:string,
+  name: string
+  description: string
   children?: IFileGuideEntry[]
 }
 
-const getFileGuideEntries = function(fileSystemEntries: IFileSystemEntry[]): IFileGuideEntry[]{
+const fileGuidPath = 'C:\\Projects\\markdown-file-guide-generator\\fileguide.js'
+
+const getFileGuideEntries = function (fileSystemEntries: IFileSystemEntry[]): IFileGuideEntry[] {
   return fileSystemEntries.map((x) => {
-    let entry: IFileGuideEntry = {
+    const entry: IFileGuideEntry = {
       name: x.name,
-      description: '',
+      description: ''
     }
-    if(x.children !== undefined && x.children !== null){
+    if (x.children !== undefined && x.children !== null) {
       entry.children = getFileGuideEntries(x.children)
     }
     return entry
   })
 }
 
-const writeFileGuid = function(fileGuideEntries: IFileGuideEntry[]){
-  let filePath = 'C:\\Projects\\markdown-file-guide-generator\\fileguide.js'
-  let fileContents = "const fileGuide = " + stringify(fileGuideEntries, {
-      indent: '  ',
-      singleQuotes: false
+const readFileGuide = function (): IFileGuideEntry[] {
+  return JSON.parse(fs.readFileSync(fileGuidPath, 'utf-8'))
+}
+
+const writeFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
+  const fileGuideContents = stringify(fileGuideEntries, {
+    indent: '  ',
+    singleQuotes: false
   })
-  fs.writeFile(filePath, fileContents, (e) => {
-    if (e !== null) throw e
-  })
+  fs.writeFileSync(fileGuidPath, fileGuideContents, 'utf-8')
+}
+
+const updateFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
+  const previousFileGuideEntries = readFileGuide()
+  
+  // TODO: updated fileGuideEntries with info from previousFileGuideEntries
+  // for(let entry of fileGuideEntries){
+  //   entry.description = previousFileGuideEntries.
+  // }
+  console.log(previousFileGuideEntries[0].description)
+
+  writeFileGuide(fileGuideEntries)
 }
 
 export const generate = function (
@@ -148,7 +163,7 @@ export const generate = function (
   }
   const fileSystemEntries = getFileSystemEntries(rootFolderPath, folderNamesToIgnoreFilesIn)
   const fileGuideEntries = getFileGuideEntries(fileSystemEntries)
-  //writeFileGuid(fileGuideEntries);
+  updateFileGuide(fileGuideEntries)
   const column1MaxLength = Math.max(...[getMaxLength(fileGuideEntries), column1Heading.length])
   const column2MaxLength = column2Heading.length
   return generateHeader(column1Heading, column2Heading, column1MaxLength, column2MaxLength) + generateRows(fileGuideEntries, 0, column1MaxLength, column2MaxLength)
