@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import path = require('path')
+import * as stringify from 'stringify-object'
 
 enum FileSystemEntryType{
   File,
@@ -22,41 +23,41 @@ const shouldIgnoreFolder = function (name: string, folderNamesToIgnoreFilesIn: s
   return folderNamesToIgnoreFilesIn.map((x) => x.toLowerCase()).includes(name)
 }
 
-const getChildren = function (rootFolderPath: string, folderNamesToIgnoreFilesIn: string[]): IFileSystemEntry[] {
-  const children: IFileSystemEntry[] = []
+const getFileSystemEntries = function (rootFolderPath: string, folderNamesToIgnoreFilesIn: string[]): IFileSystemEntry[] {
+  const fileSystemEntries: IFileSystemEntry[] = []
   var files = fs.readdirSync(rootFolderPath)
   for (var name of files) {
-    const child = new FileSystemEntry()
+    const fileSystemEntry = new FileSystemEntry()
     // get file info
     const filepath = path.resolve(rootFolderPath, name)
     const stat = fs.statSync(filepath)
     const type = stat.isFile() ? FileSystemEntryType.File : FileSystemEntryType.Folder
     // populate child
-    child.name = name + (type === FileSystemEntryType.Folder ? '/' : '')
-    child.type = type
+    fileSystemEntry.name = name + (type === FileSystemEntryType.Folder ? '/' : '')
+    fileSystemEntry.type = type
     if (type === FileSystemEntryType.Folder && !shouldIgnoreFolder(name, folderNamesToIgnoreFilesIn)) {
-      child.children = getChildren(filepath, folderNamesToIgnoreFilesIn)
+      fileSystemEntry.children = getFileSystemEntries(filepath, folderNamesToIgnoreFilesIn)
     }
-    children.push(child)
+    fileSystemEntries.push(fileSystemEntry)
   }
-  children.sort((a, b) => {
+  fileSystemEntries.sort((a, b) => {
     // folders come before files
     if (a.type === FileSystemEntryType.Folder && b.type === FileSystemEntryType.File) return -1
     if (a.type === FileSystemEntryType.File && b.type === FileSystemEntryType.Folder) return 1
     // otherwise its alphabetical
     return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
   })
-  return children
+  return fileSystemEntries
 }
 
-const getMaxLength = function (contents: IFileSystemEntry[], depth: number = 0): number {
+const getMaxLength = function (fileGuideEntries: IFileGuideEntry[], depth: number = 0): number {
   let maxLength = 0
-  if (contents.length > 0) {
-    for (var item of contents) {
+  if (fileGuideEntries.length > 0) {
+    for (var entry of fileGuideEntries) {
       // this should not include any whitespace, e.g. "└─ app.ts"
       maxLength = Math.max(...[
-        item.name.length + (depth * 3), // leader uses 3 characters for each indentation
-        item.children !== undefined && item.children !== null ? getMaxLength(item.children, depth + 1) : 0,
+        entry.name.length + (depth * 3), // leader uses 3 characters for each indentation
+        entry.children !== undefined && entry.children !== null ? getMaxLength(entry.children, depth + 1) : 0,
         maxLength
       ])
     }
@@ -78,21 +79,21 @@ const getLeader = function (depth: number, isLast: boolean): string {
   return leader
 }
 
-const generateRows = function (contents: IFileSystemEntry[], depth: number, column1MaxLength: number, column2MaxLength: number): string {
+const generateRows = function (fileGuideEntries: IFileGuideEntry[], depth: number, column1MaxLength: number, column2MaxLength: number): string {
   let markdown = ''
-  if (contents !== null) {
-    let iterations = contents.length
-    for (const item of contents) {
+  if (fileGuideEntries !== null) {
+    let iterations = fileGuideEntries.length
+    for (const entry of fileGuideEntries) {
       const leader = getLeader(depth, --iterations === 0)
       markdown += '| '
       markdown += leader
-      markdown += item.name.padEnd(column1MaxLength - leader.length, ' ')
+      markdown += entry.name.padEnd(column1MaxLength - leader.length, ' ')
       markdown += ' | '
       markdown += ''.padEnd(column2MaxLength, ' ')
       markdown += ' |'
       markdown += '\n'
-      if (item.children !== undefined && item.children !== null) {
-        markdown += generateRows(item.children, depth + 1, column1MaxLength, column2MaxLength)
+      if (entry.children !== undefined && entry.children !== null) {
+        markdown += generateRows(entry.children, depth + 1, column1MaxLength, column2MaxLength)
       }
     }
   }
@@ -106,6 +107,36 @@ const generateHeader = function (column1Heading: string, column2Heading: string,
   return markdown
 }
 
+interface IFileGuideEntry{
+  name:string,
+  description:string,
+  children?: IFileGuideEntry[]
+}
+
+const getFileGuideEntries = function(fileSystemEntries: IFileSystemEntry[]): IFileGuideEntry[]{
+  return fileSystemEntries.map((x) => {
+    let entry: IFileGuideEntry = {
+      name: x.name,
+      description: '',
+    }
+    if(x.children !== undefined && x.children !== null){
+      entry.children = getFileGuideEntries(x.children)
+    }
+    return entry
+  })
+}
+
+const writeFileGuid = function(fileGuideEntries: IFileGuideEntry[]){
+  let filePath = 'C:\\Projects\\markdown-file-guide-generator\\fileguide.js'
+  let fileContents = "const fileGuide = " + stringify(fileGuideEntries, {
+      indent: '  ',
+      singleQuotes: false
+  })
+  fs.writeFile(filePath, fileContents, (e) => {
+    if (e !== null) throw e
+  })
+}
+
 export const generate = function (
   rootFolderPath: string,
   folderNamesToIgnoreFilesIn: string[] = ['.git', 'node_modules'],
@@ -115,11 +146,10 @@ export const generate = function (
   if (rootFolderPath === undefined || rootFolderPath === null || rootFolderPath.length === 0 || !fs.existsSync(rootFolderPath)) {
     throw Error('rootFolderPath must be a path to a folder')
   }
-  const contents = getChildren(rootFolderPath, folderNamesToIgnoreFilesIn)
-  // fs.writeFile('C:\\Projects\\markdown-file-guide-generator\\fileguide.json', JSON.stringify(contents), (e) => {
-  //   if (e !== null) throw e
-  // })
-  const column1MaxLength = Math.max(...[getMaxLength(contents), column1Heading.length])
+  const fileSystemEntries = getFileSystemEntries(rootFolderPath, folderNamesToIgnoreFilesIn)
+  const fileGuideEntries = getFileGuideEntries(fileSystemEntries)
+  //writeFileGuid(fileGuideEntries);
+  const column1MaxLength = Math.max(...[getMaxLength(fileGuideEntries), column1Heading.length])
   const column2MaxLength = column2Heading.length
-  return generateHeader(column1Heading, column2Heading, column1MaxLength, column2MaxLength) + generateRows(contents, 0, column1MaxLength, column2MaxLength)
+  return generateHeader(column1Heading, column2Heading, column1MaxLength, column2MaxLength) + generateRows(fileGuideEntries, 0, column1MaxLength, column2MaxLength)
 }
