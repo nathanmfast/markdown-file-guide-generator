@@ -5,12 +5,13 @@ module.exports = {
     es2021: true
   },
   extends: [
-    'standard',
+    'standard-with-typescript',
     "eslint:recommended"
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 12
+    ecmaVersion: 12,
+    project: './tsconfig.json'
   },
   plugins: [
     '@typescript-eslint'
