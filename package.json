@@ -1,15 +1,15 @@
 {
-  "name": "readme-file-guide",
+  "name": "markdown-file-guide-generator",
   "version": "0.0.1",
-  "description": "Generates a Markdown \"File Guide\", which is a two-column table with a file structure in the first column, made using unicode box-drawing characters.",
+  "description": "Generates markdown for a \"File Guide\", which is a two-column table with a file structure (made using unicode box-drawing characters) in the first column, and descriptions of what each file is in the second column.",
   "scripts": {
     "build": "tsc",
     "start": "tsc && node ./dist/app.js",
     "lint": "eslint . --ext .ts --fix"
   },
   "author": "Nathan Fast",
-  "license": "UNLICENSED",
-  "private": true,
+  "license": "MIT",
+  "private": false,
   "devDependencies": {
     "@types/node": "^14.14.6",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
