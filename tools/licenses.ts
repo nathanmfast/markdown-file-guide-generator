@@ -59,6 +59,10 @@ it would be nice to have some common things covered,
   a function that spits out the info nicely in the console (so you can get this info for a console app - is that something people do?)
 
 how are attributions handled in differnt software e.g. console app vs website vs app
+  example from the readme of another project:
+  "winsw and sudowin are the copyrights of their respective owners. winsw is distributed under an MIT license. sudowin is distributed under a BSD license."
+  maybe that's all there is to it?
+
 
 https://github.com/mwittig/npm-license-crawler
 wrapper around license-checker. broke af (doesnt honor its own args).
