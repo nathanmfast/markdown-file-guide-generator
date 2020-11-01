@@ -40,36 +40,36 @@ const getDependencies =function(): IDependency[]{
     return dependencies
 }
 
-const reportUniqueLicenses = function():void{
-    let uniqueLicenses: string[] = []
-    let dependencies = getDependencies()
-    for(let dependency of dependencies){
-        let licensesValue = dependency.licenseInfo.licenses
-        let licenses: string[] = []
-        // need to detect (LICENSE1 OR LICENSE2) and add separately in that situation
-        // https://regex101.com/r/oAllG0/1/
-        const multipleRegex = /^\((.+)\sOR\s(.+)\)$/g
-        const match = multipleRegex.exec(licensesValue)
-        if(match){
-            licenses.push(match[1])
-            licenses.push(match[2])
-        }
-        else{
-            licenses.push(licensesValue)
-        }
-        for(let license of licenses){
-            if(uniqueLicenses.indexOf(license) === -1) {
-                uniqueLicenses.push(license);
-            }
-        }
-    }
-    uniqueLicenses.sort()
+/*
+What a shithole this is...
 
-    console.log('Unique Licenses:\n')
-    console.log(uniqueLicenses.map((x)=>'- ' + x).join('\n'))
-    console.log('\n')
-}
+SPDX (Software Package Data Exchange) 
+An open standard for communicating software bill of material information, including components, licenses, copyrights, and security references. SPDX reduces redundant work by providing a common format for companies and communities to share important data, thereby streamlining and improving compliance.
+https://spdx.org/licenses/
+https://www.npmjs.com/package/spdx-expression-parse
 
-reportUniqueLicenses()
+https://github.com/delfrrr/npm-consider
+great, can recommend. use this to install packages and it will tell you all about dependencies before you do
 
+https://github.com/davglass/license-checker
+great, can recommend, tons of contributors and users, relies on spdx packages, works well.
+seems like this is what you want to use, and the individual project can determine how to present the info it provides
+it would be nice to have some common things covered, 
+  like a html snippet of the info (style it in css on your own) or
+  a function that spits out the info nicely in the console (so you can get this info for a console app - is that something people do?)
 
+how are attributions handled in differnt software e.g. console app vs website vs app
+
+https://github.com/mwittig/npm-license-crawler
+wrapper around license-checker. broke af (doesnt honor its own args).
+
+https://github.com/marcelwinh/license-crawler
+has some neat features like sorting by package vs license, but its goofy and doesnt rely on spdx packages
+
+https://github.com/ironSource/license-report
+generates html (and other formats) report, but its goofy as hell
+
+should turn this file into its own project that relies on licence-checker directly (no output file to deal with, remove dependency on stringify)
+for now just do it in here though, then it can be easily moved and posted on its own and re-used in ynab project
+
+*/

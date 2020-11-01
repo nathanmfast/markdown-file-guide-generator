@@ -142,12 +142,14 @@ const writeFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
 
 const updateFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
   const previousFileGuideEntries = readFileGuide()
-  
+
   // TODO: updated fileGuideEntries with info from previousFileGuideEntries
   // for(let entry of fileGuideEntries){
   //   entry.description = previousFileGuideEntries.
   // }
   console.log(previousFileGuideEntries[0].description)
+  
+
 
   writeFileGuide(fileGuideEntries)
 }
