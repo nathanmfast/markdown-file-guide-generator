@@ -1,3 +1,9 @@
+TODO
+- start a branch and strip this back down to a shippable version that just generates the table and doesn't do anything to help you with descriptions or preserving them across updates.
+- start a clean repo for that and get it posted on github publicly
+- then switch back to the main branch, grab all the changes that were in progress, and start a branch on the new project
+- create an issue on the github page and start doing stuff on the actual repo
+
 # Markdown File Guide Generator  <!-- omit in toc -->
 
 Generates markdown for a \"File Guide\", which is a two-column table with a file structure (made using unicode box-drawing characters) in the first column, and descriptions of what each file is in the second column.
@@ -86,7 +92,6 @@ The table below lays out a specific example and helps to visualize the logic use
 | get-own-enumerable-property-symbols | stringify-object dependency             | 3.0.2   | ISC          |
 | is-obj                              | stringify-object dependency             | 1.0.1   | MIT          |
 | is-regexp                           | stringify-object dependency             | 1.0.0   | MIT          |
-
 
 ## License
 
