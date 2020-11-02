@@ -148,8 +148,6 @@ const updateFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
   //   entry.description = previousFileGuideEntries.
   // }
   console.log(previousFileGuideEntries[0].description)
-  
-
 
   writeFileGuide(fileGuideEntries)
 }

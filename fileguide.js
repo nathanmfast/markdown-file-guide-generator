@@ -6,12 +6,16 @@
   {
     name: ".vscode/",
     description: 
-      "Contains workspace settings for VSCode \n" +
+      "Contains workspace settings for VSCode.\n" +
       "[User and Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings)",
     children: [
       {
         name: "extensions.json",
-        description: ""
+        description: 
+          "Specifies recommended VSCode extensions to use when working with this project.\n" +
+          "[Workspace recommended extensions](https://code.visualstudio.com/docs/editor/extension-gallery#_workspace-recommended-extensions)\n" + 
+          "- yzhang.markdown-all-in-one (for previewing markdown and other markdown-related features)\n" + 
+          "- nhoizey.gremlins (for visualizing no break spaces in code)"
       }
     ]
   },

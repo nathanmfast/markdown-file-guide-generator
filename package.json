@@ -6,8 +6,8 @@
     "build": "tsc",
     "start": "tsc && node ./dist/app.js",
     "lint": "eslint . --ext .ts --fix",
-    "attribution": "license-checker --production --unknown --json --out licenses.json && tsc && node ./dist/tools/licenses.js",
-    "licenses": "license-checker --production --unknown --summary"
+    "licenses-attribution": "license-checker --production --unknown",
+    "licenses-summary": "license-checker --production --unknown --summary"
   },
   "author": "Nathan Fast",
   "license": "MIT",

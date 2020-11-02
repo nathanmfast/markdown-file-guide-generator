@@ -6,7 +6,7 @@ Generates markdown for a \"File Guide\", which is a two-column table with a file
 - [Example Usage](#example-usage)
 - [Example Output](#example-output)
 - [How It Works](#how-it-works)
-- [Change Guidance](#change-guidance)
+- [Dependencies](#dependencies)
 - [License](#license)
 
 ## Example Usage
@@ -77,17 +77,16 @@ The table below lays out a specific example and helps to visualize the logic use
 | 2     |  Y   |  │    |  └─   |       | │  └─ file4.ts            |
 | 1     |  Y   |  └─   |       |       | └─ file5.ts               |
 
-## Change Guidance
+## Dependencies
 
-To update licenses.json, you must do a global install of npm-license-crawler:
-```
-npm install npm-license-crawler --global
-```
+| Name                                | Usage                                   | Version | License      |
+| :---------------------------------- | :-------------------------------------- | :------ | :----------: |
+| fs                                  | For reading/writing files.              | 0.0.1   | ISC          |
+| stringify-object                    | For generating contents of fileguide.js | 3.3.0   | BSD-2-Clause |
+| get-own-enumerable-property-symbols | stringify-object dependency             | 3.0.2   | ISC          |
+| is-obj                              | stringify-object dependency             | 1.0.1   | MIT          |
+| is-regexp                           | stringify-object dependency             | 1.0.0   | MIT          |
 
-Then, at the project root, run:
-```
-npm-license-crawler -dependencies -json licenses.json
-```
 
 ## License
 
