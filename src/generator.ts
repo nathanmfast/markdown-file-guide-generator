@@ -25,8 +25,8 @@ const shouldIgnoreFolder = function (name: string, folderNamesToIgnoreFilesIn: s
 
 const getFileSystemEntries = function (rootFolderPath: string, folderNamesToIgnoreFilesIn: string[]): IFileSystemEntry[] {
   const fileSystemEntries: IFileSystemEntry[] = []
-  var files = fs.readdirSync(rootFolderPath)
-  for (var name of files) {
+  let files = fs.readdirSync(rootFolderPath)
+  for (let name of files) {
     const fileSystemEntry = new FileSystemEntry()
     // get file info
     const filepath = path.resolve(rootFolderPath, name)
@@ -53,7 +53,7 @@ const getFileSystemEntries = function (rootFolderPath: string, folderNamesToIgno
 const getMaxLength = function (fileGuideEntries: IFileGuideEntry[], depth: number = 0): number {
   let maxLength = 0
   if (fileGuideEntries.length > 0) {
-    for (var entry of fileGuideEntries) {
+    for (let entry of fileGuideEntries) {
       // this should not include any whitespace, e.g. "└─ app.ts"
       maxLength = Math.max(...[
         entry.name.length + (depth * 3), // leader uses 3 characters for each indentation
@@ -70,7 +70,7 @@ const getLeader = function (depth: number, isLast: boolean): string {
   if (depth > 0) {
     if (depth > 1) {
       const numSpacer = depth - 1
-      for (var x = 0; x < numSpacer; x++) {
+      for (let x = 0; x < numSpacer; x++) {
         leader += '│  '
       }
     }
@@ -82,14 +82,15 @@ const getLeader = function (depth: number, isLast: boolean): string {
 const generateRows = function (fileGuideEntries: IFileGuideEntry[], depth: number, column1MaxLength: number, column2MaxLength: number): string {
   let markdown = ''
   if (fileGuideEntries !== null) {
-    let iterations = fileGuideEntries.length
+    let iterations = 0
     for (const entry of fileGuideEntries) {
-      const leader = getLeader(depth, --iterations === 0)
+      
+      const leader = getLeader(depth, ++iterations === fileGuideEntries.length)
       markdown += '| '
       markdown += leader
       markdown += entry.name.padEnd(column1MaxLength - leader.length, ' ')
       markdown += ' | '
-      markdown += ''.padEnd(column2MaxLength, ' ')
+      markdown += entry.description.padEnd(column2MaxLength, ' ')
       markdown += ' |'
       markdown += '\n'
       if (entry.children !== undefined && entry.children !== null) {
@@ -129,7 +130,8 @@ const getFileGuideEntries = function (fileSystemEntries: IFileSystemEntry[]): IF
 }
 
 const readFileGuide = function (): IFileGuideEntry[] {
-  return JSON.parse(fs.readFileSync(fileGuidPath, 'utf-8'))
+  let fileGuideEntries: IFileGuideEntry[] = eval(fs.readFileSync(fileGuidPath, 'utf-8'))
+  return fileGuideEntries
 }
 
 const writeFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
@@ -142,13 +144,15 @@ const writeFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
 
 const updateFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
   const previousFileGuideEntries = readFileGuide()
-
-  // TODO: updated fileGuideEntries with info from previousFileGuideEntries
-  // for(let entry of fileGuideEntries){
-  //   entry.description = previousFileGuideEntries.
-  // }
-  console.log(previousFileGuideEntries[0].description)
-
+  // TODO: updated fileGuideEntries with info from previousFileGuideEntries. 
+  //       should flatten previousFileGuideEntries out to full path and run the same calculation for full path on fileGuideEntries
+  //       also create an inline method that does the lookup, so it can start by matching exactly on flatten paths, and only then attempt to resolve file moves
+  for(let fileGuideEntry of fileGuideEntries){
+    let previousFileGuideEntry = previousFileGuideEntries.find((x)=>x.name == fileGuideEntry.name)
+    if(previousFileGuideEntry){
+      fileGuideEntry.description = previousFileGuideEntry.description
+    }
+  }
   writeFileGuide(fileGuideEntries)
 }
 
