@@ -127,9 +127,16 @@ const getFileGuideEntries = function (fileSystemEntries: IFileSystemEntry[]): IF
   })
 }
 
+/**
+ * Generates markdown for a "File Guide", which is a two-column table with a file structure (made using unicode box-drawing characters) in the first column, and descriptions of what each file is in the second column.
+ * @param {string} rootFolderPath - The full path to the root folder you want to create a "File Guide" for.
+ * @param {string[]} folderNamesToIgnoreFilesIn - An array of folder names for folders whose files you do not want to be listed in the file guide. The folder itself will still be listed.
+ * @param {string} [column1Heading='File/Folder'] - The heading to put on the first column.
+ * @param {string} [column2Heading='Description'] - The heading to put on the second column.
+ */
 export const generate = function (
   rootFolderPath: string,
-  folderNamesToIgnoreFilesIn: string[] = ['.git', 'node_modules'],
+  folderNamesToIgnoreFilesIn: string[],
   column1Heading: string = 'File/Folder',
   column2Heading: string = 'Description'
 ): string {
