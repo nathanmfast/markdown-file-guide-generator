@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "allowJs": true,
-    "target": "es5",
-    "sourceMap": true,
     "module": "commonjs",
+    "target": "es2020",
     "noImplicitAny": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "sourceMap": true,    
+    "outDir": "./dist"
   },
-  "include": ["./src/**/*", "./tools/**/*"]
+  "include": ["./src/**/*"]
 }

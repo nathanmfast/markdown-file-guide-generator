@@ -1,5 +1,4 @@
 import * as fs from 'fs'
-import * as stringify from 'stringify-object'
 import path = require('path')
 
 enum FileSystemEntryType{
@@ -19,14 +18,24 @@ class FileSystemEntry implements IFileSystemEntry {
   children?: IFileSystemEntry[]
 }
 
+interface IFileGuideEntry{
+  name: string
+  children?: IFileGuideEntry[]
+}
+
+class FileGuideEntry implements IFileGuideEntry {
+  name: string
+  children?: IFileGuideEntry[]
+}
+
 const shouldIgnoreFolder = function (name: string, folderNamesToIgnoreFilesIn: string[]): boolean {
   return folderNamesToIgnoreFilesIn.map((x) => x.toLowerCase()).includes(name)
 }
 
 const getFileSystemEntries = function (rootFolderPath: string, folderNamesToIgnoreFilesIn: string[]): IFileSystemEntry[] {
   const fileSystemEntries: IFileSystemEntry[] = []
-  let files = fs.readdirSync(rootFolderPath)
-  for (let name of files) {
+  const files = fs.readdirSync(rootFolderPath)
+  for (const name of files) {
     const fileSystemEntry = new FileSystemEntry()
     // get file info
     const filepath = path.resolve(rootFolderPath, name)
@@ -53,7 +62,7 @@ const getFileSystemEntries = function (rootFolderPath: string, folderNamesToIgno
 const getMaxLength = function (fileGuideEntries: IFileGuideEntry[], depth: number = 0): number {
   let maxLength = 0
   if (fileGuideEntries.length > 0) {
-    for (let entry of fileGuideEntries) {
+    for (const entry of fileGuideEntries) {
       // this should not include any whitespace, e.g. "└─ app.ts"
       maxLength = Math.max(...[
         entry.name.length + (depth * 3), // leader uses 3 characters for each indentation
@@ -84,13 +93,12 @@ const generateRows = function (fileGuideEntries: IFileGuideEntry[], depth: numbe
   if (fileGuideEntries !== null) {
     let iterations = 0
     for (const entry of fileGuideEntries) {
-      
       const leader = getLeader(depth, ++iterations === fileGuideEntries.length)
       markdown += '| '
       markdown += leader
       markdown += entry.name.padEnd(column1MaxLength - leader.length, ' ')
       markdown += ' | '
-      markdown += entry.description.padEnd(column2MaxLength, ' ')
+      markdown += ''.padEnd(column2MaxLength, ' ')
       markdown += ' |'
       markdown += '\n'
       if (entry.children !== undefined && entry.children !== null) {
@@ -108,52 +116,15 @@ const generateHeader = function (column1Heading: string, column2Heading: string,
   return markdown
 }
 
-interface IFileGuideEntry{
-  name: string
-  description: string
-  children?: IFileGuideEntry[]
-}
-
-const fileGuidPath = 'C:\\Projects\\markdown-file-guide-generator\\fileguide.js'
-
 const getFileGuideEntries = function (fileSystemEntries: IFileSystemEntry[]): IFileGuideEntry[] {
   return fileSystemEntries.map((x) => {
-    const entry: IFileGuideEntry = {
-      name: x.name,
-      description: ''
-    }
+    const entry = new FileGuideEntry()
+    entry.name = x.name
     if (x.children !== undefined && x.children !== null) {
       entry.children = getFileGuideEntries(x.children)
     }
     return entry
   })
-}
-
-const readFileGuide = function (): IFileGuideEntry[] {
-  let fileGuideEntries: IFileGuideEntry[] = eval(fs.readFileSync(fileGuidPath, 'utf-8'))
-  return fileGuideEntries
-}
-
-const writeFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
-  const fileGuideContents = stringify(fileGuideEntries, {
-    indent: '  ',
-    singleQuotes: false
-  })
-  fs.writeFileSync(fileGuidPath, fileGuideContents, 'utf-8')
-}
-
-const updateFileGuide = function (fileGuideEntries: IFileGuideEntry[]): void {
-  const previousFileGuideEntries = readFileGuide()
-  // TODO: updated fileGuideEntries with info from previousFileGuideEntries. 
-  //       should flatten previousFileGuideEntries out to full path and run the same calculation for full path on fileGuideEntries
-  //       also create an inline method that does the lookup, so it can start by matching exactly on flatten paths, and only then attempt to resolve file moves
-  for(let fileGuideEntry of fileGuideEntries){
-    let previousFileGuideEntry = previousFileGuideEntries.find((x)=>x.name == fileGuideEntry.name)
-    if(previousFileGuideEntry){
-      fileGuideEntry.description = previousFileGuideEntry.description
-    }
-  }
-  writeFileGuide(fileGuideEntries)
 }
 
 export const generate = function (
@@ -167,7 +138,6 @@ export const generate = function (
   }
   const fileSystemEntries = getFileSystemEntries(rootFolderPath, folderNamesToIgnoreFilesIn)
   const fileGuideEntries = getFileGuideEntries(fileSystemEntries)
-  updateFileGuide(fileGuideEntries)
   const column1MaxLength = Math.max(...[getMaxLength(fileGuideEntries), column1Heading.length])
   const column2MaxLength = column2Heading.length
   return generateHeader(column1Heading, column2Heading, column1MaxLength, column2MaxLength) + generateRows(fileGuideEntries, 0, column1MaxLength, column2MaxLength)
