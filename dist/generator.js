@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generate = void 0;
@@ -13,13 +14,13 @@ class FileSystemEntry {
 class FileGuideEntry {
 }
 const shouldIgnoreFolder = function (name, folderNamesToIgnoreFilesIn) {
-    return folderNamesToIgnoreFilesIn.map((x) => x.toLowerCase()).includes(name);
+    return folderNamesToIgnoreFilesIn.map((x) => x.toLowerCase()).includes(name.toLowerCase());
 };
 const getFileSystemEntries = function (rootFolderPath, folderNamesToIgnoreFilesIn) {
     const fileSystemEntries = [];
     const files = fs.readdirSync(rootFolderPath);
     for (const name of files) {
-        let fileSystemEntry = new FileSystemEntry();
+        const fileSystemEntry = new FileSystemEntry();
         // get file info
         const filepath = path.resolve(rootFolderPath, name);
         const stat = fs.statSync(filepath);
@@ -98,7 +99,7 @@ const generateHeader = function (column1Heading, column2Heading, column1MaxLengt
 };
 const getFileGuideEntries = function (fileSystemEntries) {
     return fileSystemEntries.map((x) => {
-        let entry = new FileGuideEntry();
+        const entry = new FileGuideEntry();
         entry.name = x.name;
         if (x.children !== undefined && x.children !== null) {
             entry.children = getFileGuideEntries(x.children);
@@ -106,7 +107,15 @@ const getFileGuideEntries = function (fileSystemEntries) {
         return entry;
     });
 };
-exports.generate = function (rootFolderPath, folderNamesToIgnoreFilesIn = ['.git', 'node_modules'], column1Heading = 'File/Folder', column2Heading = 'Description') {
+/**
+ * Generates Markdown for a "File Guide".
+ * @param {string} rootFolderPath The full path to the root folder you want to create a "File Guide" for.
+ * @param {string[]} folderNamesToIgnoreFilesIn An array of folder names for folders whose files you do not want to be listed in the file guide. The folder itself will still be listed.
+ * @param {string} [column1Heading='File/Folder'] The heading to put on the first column.
+ * @param {string} [column2Heading='Description'] The heading to put on the second column.
+ * @returns {string} Markdown for a "File Guide"
+ */
+exports.generate = function (rootFolderPath, folderNamesToIgnoreFilesIn, column1Heading = 'File/Folder', column2Heading = 'Description') {
     if (rootFolderPath === undefined || rootFolderPath === null || rootFolderPath.length === 0 || !fs.existsSync(rootFolderPath)) {
         throw Error('rootFolderPath must be a path to a folder');
     }
