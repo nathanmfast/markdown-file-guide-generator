@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as fs from 'fs'
 import path = require('path')
 
@@ -29,7 +31,7 @@ class FileGuideEntry implements IFileGuideEntry {
 }
 
 const shouldIgnoreFolder = function (name: string, folderNamesToIgnoreFilesIn: string[]): boolean {
-  return folderNamesToIgnoreFilesIn.map((x) => x.toLowerCase()).includes(name)
+  return folderNamesToIgnoreFilesIn.map((x) => x.toLowerCase()).includes(name.toLowerCase())
 }
 
 const getFileSystemEntries = function (rootFolderPath: string, folderNamesToIgnoreFilesIn: string[]): IFileSystemEntry[] {
