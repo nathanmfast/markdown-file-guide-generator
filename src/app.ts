@@ -1,12 +1,8 @@
-import { generate } from './generator'
 import * as minimist from 'minimist'
+import { generate } from './generator'
 
-const markdown = generate('C:\\Projects\\markdown-file-guide-generator', ['node_modules', 'dist', '.git'])
+var args = minimist(process.argv.slice(2));
+const markdown = generate('./', ['node_modules', 'dist', '.git'], args.column1Heading, args.column2Heading);
 console.log(markdown)
 
-// this is how command line arguments work when using minimist
-console.log('--minimist--');
-var args = minimist(process.argv.slice(2));
-console.log(args.test);
-
-// try running 'npm run build' then 'node ./app.js --test=derp' to see it in action
+// try running 'npm run build' then 'node ./app.js --column1Heading=Derp' to see it in action
