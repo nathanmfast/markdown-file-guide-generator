@@ -75,6 +75,7 @@ The table below lays out a specific example and helps to visualize the logic use
 | Name                                | Usage                                   | Version | License      |
 | :---------------------------------- | :-------------------------------------- | :------ | :----------: |
 | fs                                  | For reading files/folders.              | 0.0.1   | ISC          |
+| minimist                            | For easy command-line argument parsing. | 1.2.5   | MIT          |
 
 ## License
 
