@@ -12,3 +12,7 @@ console.log(markdown)
 
 // try running 'npm run build' then from project root run:
 // node ./dist/app.js --column1Heading=Test1 --column2Heading=Test2 node_modules dist .git
+
+// To create executable, use 'pkg'
+// First, install 'pkg' globally using 'npm install -g pkg'
+// Then, change to the 'dist' directory, the run 'pkg app.js' and it will generate executables for linux, mac, and windows
