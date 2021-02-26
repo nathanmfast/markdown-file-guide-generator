@@ -3,19 +3,17 @@
 Generates markdown for a \"File Guide\", which is a two-column table with a file structure (made using unicode box-drawing characters) in the first column, and descriptions of what each file is in the second column.
 
 ## Table of Contents  <!-- omit in toc -->
-- [Example Usage](#example-usage)
+- [Compilation](#compilation)
 - [File Guide](#file-guide)
 - [How the Markdown File Guide Generator Works](#how-the-markdown-file-guide-generator-works)
 - [Dependencies](#dependencies)
 - [License](#license)
 
-## Example Usage
-```
-import { generate } from './readme-generator'
+## Compilation
 
-const markdown = generate('C:\\Projects\\my-project', ['.git', 'dist', 'node_modules'])
-console.log(markdown)
-```
+First, from project root run `npm install`.
+Then, run `npm run start` to see a demo of the application running for this project with default settings. 
+Then try `node ./dist/app.js --column1Heading=Test1 --column2Heading=Test2 node_modules dist .git` to see another demo, this time with some command line arguments to show off how it works.
 
 ## File Guide
 
