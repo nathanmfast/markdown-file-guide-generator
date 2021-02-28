@@ -5,3 +5,6 @@
    - Separate folder names by spaces.
    - If a folder name has a space in it, wrap it in quotes. e.g.:
      - "my folder" node_modules dist .git
+
+
+- add a boolean option for "ignore subfolders"
