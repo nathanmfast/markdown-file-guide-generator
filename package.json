@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "description": "Generates markdown for a \"File Guide\", which is a two-column table with a file structure (made using unicode box-drawing characters) in the first column, and descriptions of what each file is in the second column.",
   "scripts": {
+    "lint": "eslint . --ext .ts --fix",
     "build": "tsc",
-    "start": "tsc && node ./dist/app.js",
-    "lint": "eslint . --ext .ts --fix"
+    "start": "tsc && node ./dist/app.js node_modules dist .git",
+    "package": "tsc && pkg package.json --out-path=./dist/"
   },
+  "bin":"./dist/app.js",
   "author": "Nathan Fast",
   "license": "MIT",
   "private": false,
@@ -23,6 +25,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.2",
+    "pkg": "^4.4.9",
     "typescript": "^4.0.3"
   },
   "dependencies": {
