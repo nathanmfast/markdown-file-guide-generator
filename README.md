@@ -3,7 +3,6 @@
 Generates markdown for a \"File Guide\", which is a two-column table with a file structure (made using unicode box-drawing characters) in the first column, and descriptions of what each file is in the second column.
 
 ## Table of Contents  <!-- omit in toc -->
-- [TODO](#todo)
 - [How to Build and Use](#how-to-build-and-use)
 - [Arguments](#arguments)
 - [File Guide](#file-guide)
@@ -11,10 +10,6 @@ Generates markdown for a \"File Guide\", which is a two-column table with a file
 - [Dependencies](#dependencies)
 - [License](#license)
 
-## TODO
-
- - [ ] Create "--help" command line argument response.
- - [ ] Add a boolean option for ignoring subfolders.
  
 ## How to Build and Use
 
@@ -119,3 +114,10 @@ The table below lays out a specific example and helps to visualize the logic use
 Copyright (c) 2021 Nathan Fast
 
 This project is licensed under the MIT license. See the `LICENSE` file for more details.
+
+<br />
+
+# TODO <!-- omit in toc -->
+
+ - [ ] Create "--help" command line argument response.
+ - [ ] Add a boolean option for ignoring subfolders.
