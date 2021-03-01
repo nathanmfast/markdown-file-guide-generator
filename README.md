@@ -106,7 +106,6 @@ The table below lays out a specific example and helps to visualize the logic use
 
 | Name                                | Usage                                   | Version | License      |
 | :---------------------------------- | :-------------------------------------- | :------ | :----------: |
-| fs                                  | For reading files/folders.              | 0.0.1   | ISC          |
 | minimist                            | For easy command-line argument parsing. | 1.2.5   | MIT          |
 
 ## License
@@ -121,3 +120,4 @@ This project is licensed under the MIT license. See the `LICENSE` file for more 
 
  - [ ] Create "--help" command line argument response.
  - [ ] Add a boolean option for ignoring subfolders.
+ - [ ] Add script to packages.json that will copy the windows executable to C:\X\Path\mdfg.exe
