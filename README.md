@@ -5,16 +5,18 @@ Generates markdown for a \"File Guide\", which is a two-column table with a file
 ## Table of Contents  <!-- omit in toc -->
 - [TODO](#todo)
 - [How to Build and Use](#how-to-build-and-use)
+- [Arguments](#arguments)
 - [File Guide](#file-guide)
 - [How the Markdown File Guide Generator Works](#how-the-markdown-file-guide-generator-works)
 - [Dependencies](#dependencies)
 - [License](#license)
 
 ## TODO
- - [ ] add a boolean option for "ignore subfolders"
- - [ ] create "--help" command line arg response
+
+ - [ ] Create "--help" command line argument response.
+ - [ ] Add a boolean option for ignoring subfolders.
  
-## How to Build and Use 
+## How to Build and Use
 
 As with any node project, before doing anything you'll need to navigate to the project root and run `npm install`.
 
@@ -27,6 +29,26 @@ Run `npm run start` to build and run the application with the settings used to g
 Run `npm run package` to build the application and produce distributables for windows/mac/linux. The compiled application and distributables will be placed in `dist/`.
 
 I make frequent use of this library to produce File Guides in projects as well as normal folders on my machine to document what everything is. To do this, I place the windows executable in a folder along with other similar utilities, and I have that folder on my path. I rename the executable to simply 'mdfg.exe' when I do this, so I can easily get a File Guide for a folder from anywhere with a few keystrokes.
+
+## Arguments
+
+There are currently three named arguments:
+- 'rootFolderPath'
+- 'column1Heading'
+- 'column2Heading'
+
+For each of these, you can specify it like this example: 
+```
+mdfg --rootFolderPath="c:\scripts"
+```
+
+There's also an unnamed argument for listing out folder names to ignore files in. Example:
+```
+mdfg node_modules .git "folder with spaces"
+```
+Notice that if a folder name contains spaces, you need to wrap it in quotes.  
+
+Any folder with one of the specified names will not have its contents included in the File Guide. The folder itself will still be listed.
 
 ## File Guide
 
