@@ -26,16 +26,16 @@ Run `npm run build` to build the application. This compiled application will be 
 
 Run `npm run start` to build and run the application with the settings used to generate the table in the File Guide in this README.
 
-Run `npm run package` to build the application and produce distributables for windows/mac/linux. The compiled application and distributables will be placed in `dist/`.
+Run `npm run package` to build the application and produce distributables for windows/mac/linux. The compiled application will be placed in `dist/` folder, and the executables will be placed in `dist/` subfolders for their respective platforms.
 
-I make frequent use of this library to produce File Guides in projects as well as normal folders on my machine to document what everything is. To do this, I place the windows executable in a folder along with other similar utilities, and I have that folder on my path. I rename the executable to simply 'mdfg.exe' when I do this, so I can easily get a File Guide for a folder from anywhere with a few keystrokes.
+I make frequent use of this library to produce File Guides in projects as well as normal folders on my machine to document what everything is. To do this, I place the windows executable in a folder along with other similar utilities I use, and I have that folder on my path. Then I can easily get a File Guide for any folder by just typing `mdfg`.
 
 ## Arguments
 
 There are currently three named arguments:
-- 'rootFolderPath'
-- 'column1Heading'
-- 'column2Heading'
+- `rootFolderPath`
+- `column1Heading`
+- `column2Heading`
 
 For each of these, you can specify it like this example: 
 ```
